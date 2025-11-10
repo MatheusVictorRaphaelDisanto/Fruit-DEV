@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit-DEV - Assistente AI para Blox Fruits</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 1.5rem;
+        }
+        
+        .chat-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .user-message {
+            background-color: var(--secondary-color);
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+        
+        .ai-message {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .message-content {
+            line-height: 1.5;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+        
+        #send-button {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        #send-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .quick-action {
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .quick-action:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .message {
+                max-width: 90%;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-icon">🍇</div>
+            <h1>Fruit-DEV</h1>
+        </div>
+        <p class="subtitle">Assistente de Inteligência Artificial especializada em Blox Fruits</p>
+    </header>
+    
+    <main>
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai-message">
+                    <div class="message-sender">Fruit-DEV</div>
+                    <div class="message-content">
+                        Olá! Eu sou a Fruit-DEV, sua assistente especializada em Blox Fruits. 
+                        Posso ajudar com dicas sobre frutas, localizações, combos, estratégias e muito mais. 
+                        Como posso ajudá-lo hoje?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Digite sua pergunta sobre Blox Fruits..." autocomplete="off">
+                <button id="send-button">Enviar</button>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-action" data-question="Quais são as melhores frutas para iniciantes?">Melhores frutas para iniciantes</div>
+                <div class="quick-action" data-question="Como encontrar a fruta Leopard?">Encontrar fruta Leopard</div>
+                <div class="quick-action" data-question="Quais são os melhores combos para PvP?">Melhores combos PvP</div>
+                <div class="quick-action" data-question="Como upar rápido no Blox Fruits?">Como upar rápido</div>
+            </div>
+            
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Fruit-DEV Online - Conectado à API Deepseek</span>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Feito por Heitor dos Santos e Pedro Henrique Pinheiro Lopes @2025</p>
+    </footer>
+
+    <script>
+        // Elementos da interface
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const quickActions = document.querySelectorAll('.quick-action');
+        
+        // Configurações da API
+        const API_KEY = "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";
+        const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+        
+        // Adicionar mensagem ao chat
+        function addMessage(sender, content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            
+            const senderDiv = document.createElement('div');
+            senderDiv.className = 'message-sender';
+            senderDiv.textContent = sender;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(senderDiv);
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll para a última mensagem
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Enviar mensagem para a API
+        async function sendMessageToAPI(message) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek/deepseek-chat-v3-0324:free",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "Você é a Fruit-DEV, uma assistente especializada no jogo Blox Fruits do Roblox. Você fornece informações precisas sobre frutas, localizações, combos, estratégias, dicas e truques para o jogo. Mantenha suas respostas focadas no jogo e seja útil para os jogadores. Seja amigável e profissional."
+                            },
+                            {
+                                role: "user",
+                                content: message
+                            }
+                        ],
+                        max_tokens: 1000
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('Erro ao chamar a API:', error);
+                return "Desculpe, estou tendo problemas para me conectar no momento. Por favor, tente novamente mais tarde.";
+            }
+        }
+        
+        // Processar entrada do usuário
+        async function processUserInput() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Adicionar mensagem do usuário
+            addMessage("Você", message, true);
+            userInput.value = '';
+            
+            // Mostrar indicador de digitação
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message ai-message';
+            typingIndicator.id = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="message-sender">Fruit-DEV</div>
+                <div class="message-content">Digitando...</div>
+            `;
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Obter resposta da API
+            const response = await sendMessageToAPI(message);
+            
+            // Remover indicador de digitação
+            document.getElementById('typing-indicator').remove();
+            
+            // Adicionar resposta da AI
+            addMessage("Fruit-DEV", response);
+        }
+        
+        // Event Listeners
+        sendButton.addEventListener('click', processUserInput);
+        
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                processUserInput();
+            }
+        });
+        
+        quickActions.forEach(action => {
+            action.addEventListener('click', () => {
+                userInput.value = action.getAttribute('data-question');
+                processUserInput();
+            });
+        });
+    </script>
+</body>
+</html>
